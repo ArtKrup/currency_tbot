@@ -12,7 +12,7 @@ def insert_data_to_db(func):
 
         cursor.execute('CREATE TABLE IF NOT EXISTS banks'
                         '(id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, '
-                        'day DATE NOT NULL, '
+                        'day DATE NOT NULL DEFAULT CURRENT_DATE, '
                         'name_bank VARCHAR(10) NOT NULL, '
                         'country VARCHAR(3) NOT NULL, '
                         'usd_buy FLOAT, usd_sell FLOAT, '
