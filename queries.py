@@ -24,8 +24,8 @@ def insert_data_to_db(func):
 
     data_list = [item[1] for item in func().items()]
 
-    sql = f'INSERT INTO BANKS (day, name_bank, country, usd_buy, usd_sell, ' \
-          'euro_buy, euro_sell, lira_buy, lira_sell) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    sql = f'INSERT INTO BANKS (name_bank, country, usd_buy, usd_sell, ' \
+          'euro_buy, euro_sell, lira_buy, lira_sell) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
 
     cursor.execute(sql, data_list)
     conn.commit()
