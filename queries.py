@@ -3,7 +3,7 @@ import os
 
 def insert_data_to_db(func):
     try:
-        DATABASE_URL = 'postgres://xvgvrxzrfffhil:e1e56958e248c55623ff1dd7da953a9de00c0493eca529210377ccec4ad91eb9@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d3aubcndgja659'
+        DATABASE_URL = 'DATABASE_URL'
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
         """conn = psycopg2.connect(dbname='postgres', user='postgres',
