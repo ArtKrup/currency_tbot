@@ -1,10 +1,11 @@
 from aiogram import Dispatcher, executor, Bot, types
+import os
 import asyncio
 import logging
 from queries import *
 from requests_banks import *
 
-TOKEN = 'TOKEN'
+TOKEN = os.environ['TOKEN']
 
 banks = {'rico': ge_rico_rates,
 		 'state': ge_state_rates,
