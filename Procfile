@@ -1,1 +1,1 @@
-app: python currency_tbot
+app: python currency_tbot.py
