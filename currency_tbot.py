@@ -1,75 +1,101 @@
+from aiogram import Dispatcher, executor, Bot, types
+import asyncio
 import logging
-from aiogram import Bot, Dispatcher, executor, types
+from queries import *
 from requests_banks import *
-#from queries import *
 
-# Объект бота
-bot = Bot(token="5286487843:AAEiloLTW3WW4nvSdsJwRwYFijiZbe8PqvQ")
-# Диспетчер для бота
-dp = Dispatcher(bot)
+TOKEN = "5261629533:AAE8K9wLxUssY2ak6nIF2xk-wOaDK7KNn_4"
 
-# Включаем логирование, чтобы не пропустить важные сообщения
-logging.basicConfig(level=logging.INFO)
-
-
-# Хэндлер на команду /buy_dollar
-@dp.message_handler(commands="buy_usd")
-async def cmd_buy_dollar(message: types.Message):
-    command = get_rates('usd_buy')
-    await message.reply(command)
-    
-
-# Хэндлер на команду /sell_dollar
-@dp.message_handler(commands="sell_usd")
-async def cmd_sell_dollar(message: types.Message):
-    command = get_rates('usd_sell')
-    await message.reply(command)
+banks = {'rico': ge_rico_rates,
+		 'state': ge_state_rates,
+		 'tbc': ge_tbc_rates,
+		 'georgiabank': ge_georgiabank_rates,
+		 'mbc': ge_mbc_rates,
+		 'basis': ge_basis_rates,
+		 'crystal': ge_crystal_rates,
+		 'tinkoff': ru_tinkoff_rates,
+		 'isbank': tr_isbank_rates,
+		 'trabzon': tr_trabzon_rates,
+		 'prior': by_prior_rates
+		 }
 
 
-# Хэндлер на команду /buy_euro
-@dp.message_handler(commands="buy_euro")
-async def cmd_buy_euro(message: types.Message):
-    command = get_rates('euro_buy')
-    await message.reply(command)
-    
-
-# Хэндлер на команду /sell_euro
-@dp.message_handler(commands="sell_euro")
-async def cmd_sell_euro(message: types.Message):
-    command = get_rates('euro_sell')
-    await message.reply(command)
+async def add_new_data_to_db():
+    while True:
+        for k,v in banks.items():
+            insert_data_to_db(v)
+        print('new data added into db succesfully')
+        await asyncio.sleep(86400)
 
 
-# Хэндлер на команду /buy_lira
-@dp.message_handler(commands="buy_lira")
-async def cmd_buy_lira(message: types.Message):
-    command =get_rates('lira_buy')
-    await message.reply(command)
-    
+async def update_data_in_db():
+	while True:
+		await asyncio.sleep(1800)
+		for k,v in banks.items():
+			update_data_db(v)
+		print('db updated succesfully')
 
-# Хэндлер на команду /sell_lira
-@dp.message_handler(commands="sell_lira")
-async def cmd_sell_lira(message: types.Message):
-    command = get_rates('lira_sell')
-    await message.reply(command)
-    
-# Хэндлер на команду /f_buy_usd
-@dp.message_handler(commands="f_buy_usd")
-async def cmd_buy_lira(message: types.Message):
-    command =get_rates('buy_usd', 'ww')
-    await message.reply(command)
 
-# Хэндлер на команду /f_sell_usd
-@dp.message_handler(commands="foreign_banks")
-async def cmd_buy_lira(message: types.Message):
-    command = foreign_banks()
-    await message.reply(command)
+async def bot_adding_updating(dispatcher: Dispatcher):
+	asyncio.create_task(add_new_data_to_db())
+	asyncio.create_task(update_data_in_db())
 
-"""@dp.message_handler(commands="get_sql")
-async def cmd_buy_lira(message: types.Message):
-    command = select_db()
-    await message.reply(command) """
 
-if __name__ == "__main__":
-    # Запуск бота
-    executor.start_polling(dp, skip_updates=True)
+async def command_usd_buy(message: types.Message):
+	command = select_data_from_db('usd_sell')
+	await message.reply(command)
+
+
+async def command_usd_sell(message: types.Message):
+	command = select_data_from_db('usd_buy')
+	await message.reply(command)
+
+
+async def command_euro_buy(message: types.Message):
+	command = select_data_from_db('euro_sell')
+	await message.reply(command)
+
+
+async def command_euro_sell(message: types.Message):
+	command = select_data_from_db('euro_buy')
+	await message.reply(command)
+
+
+async def command_lira_buy(message: types.Message):
+	command = select_data_from_db('lira_sell')
+	await message.reply(command)
+
+''
+async def command_lira_sell(message: types.Message):
+	command = select_data_from_db('lira_buy')
+	await message.reply(command)
+
+
+async def command_foreign_banks(message: types.Message):
+	command = select_data_foreign_banks_db()
+	await message.reply(command)
+
+commands_list = [(command_usd_buy, 'usd_buy'),
+				 (command_usd_sell, 'usd_sell'),
+				 (command_euro_buy, 'euro_buy'),
+				 (command_euro_sell, 'euro_sell'),
+				 (command_lira_buy, 'lira_buy'),
+				 (command_lira_sell, 'lira_sell'),
+				 (command_foreign_banks, 'foreign_banks')]
+
+
+def create_command_to_bot():
+	dp = Dispatcher(Bot(token=TOKEN))
+	# bot endpoints block:
+	for command in commands_list:
+		dp.register_message_handler(
+			command[0],
+			commands=[command[1]]
+		)
+	# start bot
+	executor.start_polling(dp, skip_updates=True, on_startup=bot_adding_updating)
+
+
+if __name__ == '__main__':
+	logging.basicConfig(level=logging.INFO)
+	create_command_to_bot()
