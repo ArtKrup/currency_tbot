@@ -18,6 +18,7 @@ def insert_data_to_db(func):
                         'usd_buy FLOAT, usd_sell FLOAT, '
                         'euro_buy FLOAT, euro_sell FLOAT, '
                         'lira_buy FLOAT, lira_sell FLOAT)')
+	print('database created succesfully')
     except:
         print("Ошибка при работе с PostgreSQL")
 
