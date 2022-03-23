@@ -3,7 +3,7 @@ import os
 
 def insert_data_to_db(func):
     try:
-        DATABASE_URL = os.getenv('DATABASE_URL')
+        DATABASE_URL = os.environ['DATABASE_URL']
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
         """conn = psycopg2.connect(dbname='postgres', user='postgres',
@@ -98,12 +98,12 @@ def update_data_db(bank_dict):
     bank = [bank_dict['usd_buy'], bank_dict['usd_sell'], bank_dict['euro_buy'], bank_dict['euro_sell'],
             bank_dict['lira_buy'], bank_dict['lira_sell'], bank_dict['name_bank']]
     update = f'UPDATE banks SET ' \
-             f'usd_buy = %s,' \
              f'usd_sell = %s,' \
-             f'euro_buy = %s,' \
+             f'usd_buy = %s,' \
              f'euro_sell = %s,' \
-             f'lira_buy = %s,' \
-             f'lira_sell = %s' \
+             f'euro_buy = %s,' \
+             f'lira_sell = %s,' \
+             f'lira_buy = %s' \
              f' WHERE day = CURRENT_DATE AND name_bank = %s;'
 
     DATABASE_URL = os.environ['DATABASE_URL']
