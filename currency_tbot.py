@@ -4,7 +4,7 @@ import logging
 from queries import *
 from requests_banks import *
 
-TOKEN = '5286487843:AAEiloLTW3WW4nvSdsJwRwYFijiZbe8PqvQ'
+TOKEN = 'TOKEN'
 
 banks = {'rico': ge_rico_rates,
 		 'state': ge_state_rates,
