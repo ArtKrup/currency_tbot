@@ -5,7 +5,7 @@ import logging
 from queries import *
 from requests_banks import *
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.getenv('TOKEN')
 
 banks = {'rico': ge_rico_rates,
 		 'state': ge_state_rates,
