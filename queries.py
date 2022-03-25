@@ -85,8 +85,11 @@ def select_data_from_db(currency):
     for item in sql_list:
         if item[1] == None or type(item[1]) == 'NoneType':
             sql_list.remove(item)
-
-    sql_list.sort(key=lambda x: (x[1], x[0]))
+    try:
+        sql_list.sort(key=lambda x: (x[1], x[0]))
+    except:
+        print(f'Не могу прочитать {sql_list} есть недопустимые значения!')
+        return f'Не могу загрузить данные попробуйте через полчаса!('
 
     answer_message = f'Банки {phrases_dict[currency]} по следующему курсу: \n'
     for item in sql_list:
