@@ -82,9 +82,7 @@ def select_data_from_db(currency):
         print("Ошибка при работе с PostgreSQL")
         return 'Ошибка при работе с PostgreSQL'
 
-    for item in sql_list:
-        if type(item[1]) != 'float':
-            sql_list.remove(item)
+    
     try:
         sql_list.sort(key=lambda x: (x[1], x[0]))
     except:
