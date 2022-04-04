@@ -33,7 +33,7 @@ def insert_data_to_db(func):
 
 
 def select_data_foreign_banks_db():
-    query = f"SELECT name_bank, country, usd_buy, usd_sell, euro_buy, euro_sell " \
+    query = f"SELECT DISTINCT name_bank, country, usd_buy, usd_sell, euro_buy, euro_sell " \
 			f"FROM banks WHERE day = CURRENT_DATE AND country <> 'gel'"
     try:
         DATABASE_URL = os.environ['DATABASE_URL']
@@ -63,7 +63,7 @@ def select_data_from_db(currency):
     phrases_dict = {'usd_sell': 'продают доллары', 'usd_buy': 'покупают доллары', 'euro_sell': 'продают евро',
                     'euro_buy': 'покупают евро', 'lira_sell': 'продают лиры', 'lira_buy': 'покупают лиры'}
 
-    query = f"SELECT name_bank, {currency} FROM banks WHERE day = CURRENT_DATE AND {currency} IS NOT NULL AND country = 'gel'"
+    query = f"SELECT DISTINCT name_bank, {currency} FROM banks WHERE day = CURRENT_DATE AND {currency} IS NOT NULL AND country = 'gel'"
     try:
         DATABASE_URL = os.environ['DATABASE_URL']
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
