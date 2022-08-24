@@ -1,6 +1,7 @@
 import psycopg2
 import os
 
+# initialising database and inserting data into database
 def insert_data_to_db(func):
     try:
         DATABASE_URL = os.environ['DATABASE_URL']
@@ -32,6 +33,7 @@ def insert_data_to_db(func):
     cursor.close()
 
 
+# select rates from foreing banks
 def select_data_foreign_banks_db():
     query = f"SELECT DISTINCT name_bank, country, usd_buy, usd_sell, euro_buy, euro_sell " \
 			f"FROM banks WHERE day = CURRENT_DATE AND country <> 'gel'"
@@ -58,7 +60,7 @@ def select_data_foreign_banks_db():
 						  f'EUR {item[4]} || {item[4]} {item[1].upper()}\n'
     return answer_message
 
-
+# select data from georgian banks
 def select_data_from_db(currency):
     phrases_dict = {'usd_sell': 'продают доллары', 'usd_buy': 'покупают доллары', 'euro_sell': 'продают евро',
                     'euro_buy': 'покупают евро', 'lira_sell': 'продают лиры', 'lira_buy': 'покупают лиры'}
@@ -94,6 +96,8 @@ def select_data_from_db(currency):
         answer_message += f'{item[0].capitalize().strip()} : {item[1]} \n'
     return answer_message
 
+
+# updating rates function
 def update_data_db(bank_dict):
     bank_dict = bank_dict()
     bank = [bank_dict['usd_buy'], bank_dict['usd_sell'], bank_dict['euro_buy'], bank_dict['euro_sell'],
