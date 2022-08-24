@@ -17,18 +17,14 @@ Telegram Bot shows the rates of the main currencies of various banks in Batumi
 
 ## Installing
 
-1. Install Python-libraries:
+1. Create Telegram Bot via [[Bot Father](https://t.me/BotFather)]
 
-`$ pip install -r requirements.txt`
+2. Add valid TELEGRAM TOKEN ID in [[currency_tbot.py](https://github.com/ArtKrup/currency_tbot/edit/master/currency_tbot.py)]
 
-2. Create Telegram Bot via [[Bot Father](https://t.me/BotFather)]
+3. Add valid css classes in [[parser](https://github.com/ArtKrup/currency_tbot/blob/master/requests_banks.py)]
 
-3. Add valid TELEGRAM TOKEN ID in [[currency_tbot.py](https://github.com/ArtKrup/currency_tbot/edit/master/currency_tbot.py)]
-
-4. Add valid css classes in [[parser](https://github.com/ArtKrup/currency_tbot/blob/master/requests_banks.py)]
-
-5. Create new app in [[Heroku](https://dashboard.heroku.com/apps)]
-  5.1 Choose deploy method "Connect to GitHub"
-  5.2 Input 'currency_tbot' into repo-name
-  5.3 Push 'Deploy Branch'
+4. Create new app in [[Heroku](https://dashboard.heroku.com/apps)]
+  <br>4.1 Choose deploy method "Connect to GitHub"
+  <br>4.2 Input 'currency_tbot' into repo-name
+  <br>4.3 Push 'Deploy Branch'
   
