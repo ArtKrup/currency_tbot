@@ -3,15 +3,16 @@ from bs4 import BeautifulSoup
 import datetime
 import json
 
-#Requests
+# requests
 def call_url(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     return soup
 
+# georgian state bank
 def ge_state_rates():
 	soup = call_url('https://nbg.gov.ge/en/monetary-policy/currency')
-	span = soup.find_all('span', class_='text-body1 font-normal font-md leading-body1 text-grey-800')
+	span = soup.find_all('span', class_='STATEBANK_RATE_CLASS')
 	state_usd_sell = float(span[-6].text.replace(',', '.'))
 	state_euro_sell = float(span[26].text.replace(',', '.'))
 	state_lira_sell = float(span[-10].text.replace(',', '.'))
@@ -19,10 +20,11 @@ def ge_state_rates():
 				   'usd_sell': state_usd_sell, 'usd_buy': None, 'euro_sell': state_euro_sell, 'euro_buy': None,
 				   'lira_sell': state_lira_sell, 'lira_buy': None}
 	return result_dict
-	
+
+# RICO organization
 def ge_rico_rates():
 	soup = call_url('https://www.rico.ge/')
-	span = soup.find_all('td', class_='h5 font-weight-bold text-primary')
+	span = soup.find_all('td', class_='RICO_RATE_CLASS')
 	rico_usd_sell = float(span[0].text.strip())
 	rico_usd_buy = float(span[1].text.strip())
 	rico_euro_sell = float(span[2].text.strip())
@@ -34,21 +36,22 @@ def ge_rico_rates():
 				   'lira_sell': rico_lira_sell, 'lira_buy': rico_lira_buy}
 	return result_dict
 	
-	
+# TBC bank	
 def ge_tbc_rates():
 	soup = call_url('https://www.tbcbank.ge/web/en/web/guest/exchange-rates?p_p_id=exchangeratessmall_WAR_tbcpwexchangeratessmallportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-5&p_p_col_count=1')
 	soup_lira = call_url('https://www.tbcbank.ge/web/en/web/guest/exchange-rates?p_p_id=exchangerates_WAR_tbcpwexchangeratesportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=allRatesTab&p_p_cacheability=cacheLevelPage&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=3')
-	tbc_usd_sell = float(soup.find_all('div', class_='currRate')[0].text.strip())
-	tbc_usd_buy = float(soup.find_all('div', class_='currRate')[1].text.strip())
-	tbc_euro_sell = float(soup.find_all('div', class_='currRate')[2].text.strip())
-	tbc_euro_buy = float(soup.find_all('div', class_='currRate')[3].text.strip())
-	tbc_lira_sell = float(soup_lira.find_all('span', class_='currCopyAll')[-2].text.strip())
-	tbc_lira_buy = float(soup_lira.find_all('span', class_='currCopyAll')[-1].text.strip())
+	tbc_usd_sell = float(soup.find_all('div', class_='TBC_RATE-CLASS')[0].text.strip())
+	tbc_usd_buy = float(soup.find_all('div', class_='TBC_RATE-CLASS')[1].text.strip())
+	tbc_euro_sell = float(soup.find_all('div', class_='TBC_RATE-CLASS')[2].text.strip())
+	tbc_euro_buy = float(soup.find_all('div', class_='TBC_RATE-CLASS')[3].text.strip())
+	tbc_lira_sell = float(soup_lira.find_all('span', class_='TBC_RATE-CLASS')[-2].text.strip())
+	tbc_lira_buy = float(soup_lira.find_all('span', class_='TBC_RATE-CLASS')[-1].text.strip())
 	result_dict = {'name_bank': 'tbc', 'country': 'gel', 'usd_sell': tbc_usd_sell,
 				   'usd_buy': tbc_usd_buy, 'euro_sell': tbc_euro_sell, 'euro_buy': tbc_euro_buy,
 				   'lira_sell': tbc_lira_sell, 'lira_buy': tbc_lira_buy}
 	return result_dict
 
+# bank of georgia
 def ge_georgiabank_rates():
 	soup = call_url('https://bankofgeorgia.ge/api/currencies/page/pages/5c0a361ff85d2d574073cf30')
 	json_obj = json.loads(soup.text)
@@ -64,6 +67,7 @@ def ge_georgiabank_rates():
 	return result_dict
 
 
+# MBC organization
 def ge_mbc_rates():
 	soup = call_url(
 		'https://fxrates.mbc.com.ge:8022/api/fxrates/mbc/commercial?fbclid=IwAR0YnhhhQgvHblGe06uyIwQmyv4s8ngxTjZInSVlTKvKNcMZshPdaoydFfo/api/fxrates/mbc/commercial')
@@ -79,7 +83,7 @@ def ge_mbc_rates():
 				   'lira_sell': mbc_lira_sell, 'lira_buy': mbc_lira_buy}
 	return result_dict
 
-
+# basis bank
 def ge_basis_rates():
 	soup = call_url('https://static.bb.ge/source/api/view/main/getXrates')
 	json_obj = json.loads(json.loads(soup.text)[0]['xrates'])
@@ -94,6 +98,7 @@ def ge_basis_rates():
 	return result_dict
 
 
+# crystal organization
 def ge_crystal_rates():
 	soup = call_url('https://crystal.ge/exchange')
 	currencies = soup.find_all('tr')
@@ -107,10 +112,11 @@ def ge_crystal_rates():
 	return result_dict
 
 
+# credo bank
 def ge_credo_rates():
     soup = call_url('https://credobank.ge/')
-    currencies_buy = soup.find_all('div', class_="currency second-column")
-    currencies_sell = soup.find_all('div', class_="third-column")
+    currencies_buy = soup.find_all('div', class_="CREDO_RATE_CLASS_BUY")
+    currencies_sell = soup.find_all('div', class_="CREDO_RATE_CLASS_SELL")
     credo_usd_sell = float(currencies_buy[0].text)
     credo_usd_buy = float(currencies_sell[0].text)
     credo_euro_sell = float(currencies_buy[1].text)
@@ -119,6 +125,7 @@ def ge_credo_rates():
     return result_dict
 
 
+# tinkoff russian bank
 def ru_tinkoff_rates():
 	soup_usd = call_url('https://api.tinkoff.ru/v1/currency_rates?from=USD&to=RUB')
 	json_obj = json.loads(soup_usd.text)
@@ -134,6 +141,7 @@ def ru_tinkoff_rates():
 	return result_dict
 
 
+# isbank turkish bank
 def tr_isbank_rates():
 	soup = call_url('https://www.isbank.com.tr/en/foreign-exchange-rates')
 	currencies = soup.find_all('tr')
@@ -145,6 +153,7 @@ def tr_isbank_rates():
 	return result_dict
 
 
+# beyazdoviz turkish organization
 def tr_trabzon_rates():
 	soup = call_url('https://www.beyazdoviz.com/')
 	currencies = soup.find_all('tr')
@@ -156,9 +165,10 @@ def tr_trabzon_rates():
 	return result_dict
 
 
+# prior belarus bank
 def by_prior_rates():
 	soup = call_url('https://www.prior.by/web/Bia.Portlets.Mc.Default.CurrencyRates.Prior.Widget/RatesWidget/Index?prtlId=prtl3&controller=&view=&title=&_=1647252095591')
-	currencies = soup.find_all('div', class_="new")
+	currencies = soup.find_all('div', class_="PRIOR_RATE_CLASS")
 	prior_usd_sell = float(currencies[0].text.strip())
 	prior_usd_buy = float(currencies[1].text.strip())
 	prior_euro_sell = float(currencies[6].text.strip())
