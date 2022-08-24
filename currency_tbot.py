@@ -4,9 +4,9 @@ import asyncio
 import logging
 from queries import *
 from requests_banks import *
-
-TOKEN = '5286487843:AAEiloLTW3WW4nvSdsJwRwYFijiZbe8PqvQ'
-
+# unique id for telegram bot
+TOKEN = 'TELEGRAM_BOT_TOKEN'
+# banks list
 banks = {'rico': ge_rico_rates,
 		 'state': ge_state_rates,
 		 'tbc': ge_tbc_rates,
@@ -20,7 +20,7 @@ banks = {'rico': ge_rico_rates,
 		 'prior': by_prior_rates
 		 }
 
-
+# function for add new data into database
 async def add_new_data_to_db():
     while True:
         for k,v in banks.items():
@@ -28,7 +28,7 @@ async def add_new_data_to_db():
         print('new data added into db succesfully')
         await asyncio.sleep(86400)
 
-
+# function for update data 
 async def update_data_in_db():
 	while True:
 		await asyncio.sleep(1800)
@@ -36,12 +36,12 @@ async def update_data_in_db():
 			update_data_db(v)
 		print('db updated succesfully')
 
-
+# add and update data for teleram bot 
 async def bot_adding_updating(dispatcher: Dispatcher):
 	asyncio.create_task(add_new_data_to_db())
 	asyncio.create_task(update_data_in_db())
 
-
+# commands for telegram bot
 async def command_usd_buy(message: types.Message):
 	command = select_data_from_db('usd_sell')
 	await message.reply(command)
@@ -84,7 +84,7 @@ commands_list = [(command_usd_buy, 'usd_buy'),
 				 (command_lira_sell, 'lira_sell'),
 				 (command_foreign_banks, 'foreign_banks')]
 
-
+# creating and starting telegram bot
 def create_command_to_bot():
 	dp = Dispatcher(Bot(token=TOKEN))
 	# bot endpoints block:
